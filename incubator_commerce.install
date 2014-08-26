@@ -1,0 +1,168 @@
+<?php
+
+/**
+ * @file
+ *
+ */
+
+function incubator_commerce_install() {
+  module_enable(array(
+    'commerce_customer_ui',
+    'commerce_order_ui',
+    'commerce_payment_ui',
+    'commerce_product_pricing_ui',
+    'commerce_product_ui',
+  ));
+  
+}
+
+function incubator_commerce_enable() {
+  $t = get_t();
+  
+  // CREATE Product display content type
+  $type = array(
+    'type' => 'product_display',
+    'name' => $t('Product display', array(), array('#context' => 'Node type name')),
+    'description' => $t('Use an <em>Event</em> for single or recurring community events.')
+  );
+  $pathauto_prefix = $t('products/', array(), array('#context' => 'Web search friendly URL - no special characters'));
+  if (_incubator_create_nodetype($type, $pathauto_prefix, 2, FALSE)) {
+    _incubator_attach_field('field_main_image', 'product_display');
+    _incubator_attach_field('field_tags', 'product_display');
+    _incubator_attach_field('field_product', 'product_display');
+    // add location
+    _incubator_set_location('product_display', array('multiple' => array('min' => 0, 'max' => 0, 'add' => 0)));
+    variable_set("pathauto_node_{$type['type']}_pattern", variable_get("pathauto_node_{$type['type']}_pattern", '') . '-10[node:nid]');
+  }
+  
+  module_enable(array(
+    'eva',
+    'views_megarow',
+    'views_bulk_operations',
+    'commerce_backoffice',
+    'commerce_backoffice_content',
+    'commerce_backoffice_product',
+    'commerce_backoffice_order',
+  ));
+  
+  $salesperson = _incubator_create_role('salesperson', 'product_display');
+  $permissions = array(
+    'administer product display types',
+    'administer commerce_customer_profile entities',
+    'view any commerce_order entity',
+    'administer product types',
+    'administer commerce_product entities',
+  );
+  user_role_grant_permissions($salesperson->rid, $permissions);
+  
+  
+  
+}
+
+function incubator_commerce_disable() {
+  module_load_install('incubator');
+  module_disable(array(
+    'commerce_backoffice_content',
+    'commerce_backoffice_product',
+    'commerce_backoffice_order',
+    'views_bulk_operations',
+    'commerce_backoffice',
+    'views_megarow',
+    'eva',
+  ));
+  _incubator_delete_nodetype('product_display');
+  $role = user_role_load_by_name('salesperson');
+  user_role_($role->rid, array());
+}
+
+function incubator_commerce_uninstall() {
+  user_role_delete('salesperson');
+}
+
+function _incubator_fields_field_product($op = 'field') {
+  $t = get_t();
+
+  // FIELD DEFINITION
+  if ($op == 'field') {
+    $field = array(
+      'translatable' => '0',
+      'settings' => array(
+        'options_list_limit' => '',
+      ),
+      'storage' => array(
+        'type' => 'field_sql_storage',
+        'settings' => array(),
+      ),
+      'field_name' => 'field_product',
+      'type' => 'commerce_product_reference',
+      'locked' => '0',
+      'cardinality' => '-1',
+    );
+    return $field;
+  }
+
+  // FIELD INSTANCE DEFINITION
+  elseif ($op == 'instance') {
+    $instance = array(
+      'label' => 'Product',
+      'widget' => array(
+        'weight' => '43',
+        'type' => 'inline_entity_form',
+        'module' => 'inline_entity_form',
+        'active' => 1,
+        'settings' => array(
+          'fields' => array(),
+          'type_settings' => array(
+            'allow_existing' => 1,
+            'match_operator' => 'STARTS_WITH',
+            'delete_references' => 1,
+            'override_labels' => 1,
+            'label_singular' => 'product',
+            'label_plural' => 'products',
+            'autogenerate_title' => 1,
+          ),
+        ),
+      ),
+      'settings' => array(
+        'field_injection' => 1,
+        'referenceable_types' => array(
+          'product' => 0,
+        ),
+        'user_register_form' => FALSE,
+      ),
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'type' => 'commerce_cart_add_to_cart_form',
+          'settings' => array(
+            'show_quantity' => FALSE,
+            'default_quantity' => 1,
+            'combine' => TRUE,
+            'show_single_product_attributes' => FALSE,
+            'line_item_type' => 'product',
+          ),
+          'module' => 'commerce_cart',
+          'weight' => 51,
+        ),
+        'teaser' => array(
+          'type' => 'hidden',
+          'label' => 'above',
+          'settings' => array(),
+          'weight' => 0,
+        ),
+        'search_result' => array(
+          'type' => 'hidden',
+          'label' => 'above',
+          'settings' => array(),
+          'weight' => 0,
+        ),
+      ),
+      'required' => 0,
+      'description' => '',
+      'field_name' => 'field_product',
+    );
+    return $instance;
+  }
+
+  return FALSE;
+}

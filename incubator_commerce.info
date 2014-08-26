@@ -1,0 +1,31 @@
+name = "Commerce"
+description = "Set up an online store to sell products directly from your website."
+package = *Incubator
+core = 7.x
+configure = admin/config/commerce-settings
+
+incubator_weight = -5
+incubator_nodetype = product_display
+incubator_icon = icon.jpg
+
+dependencies[] = incubator
+dependencies[] = inline_entity_form
+dependencies[] = commerce_ui
+dependencies[] = commerce_cart
+dependencies[] = commerce_checkout
+dependencies[] = commerce_product
+dependencies[] = commerce_product_reference
+dependencies[] = entity_token
+dependencies[] = rules
+dependencies[] = commerce
+dependencies[] = rules_admin
+dependencies[] = commerce_product_pricing
+dependencies[] = commerce_price
+dependencies[] = commerce_line_item
+dependencies[] = addressfield
+dependencies[] = commerce_customer
+dependencies[] = commerce_order
+dependencies[] = commerce_payment
+
+;stylesheets[all][] = 
+;scripts[] = 
