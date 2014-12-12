@@ -27,5 +27,5 @@ dependencies[] = commerce_customer
 dependencies[] = commerce_order
 dependencies[] = commerce_payment
 
-;stylesheets[all][] = 
+stylesheets[all][] = css/incubator_commerce.css
 ;scripts[] = 
