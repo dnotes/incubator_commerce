@@ -2,3 +2,24 @@
 .field-name-commerce-order-total table.commerce-price-formatted-components {
   width:100%;
 }
+
+.page-admin-commerce-orders {
+  .field-name-commerce-customer-shipping {
+    .field-label { 
+      position: relative;
+      color: red; 
+      font-family: "Comic Sans MS";
+      font-size: 140%;
+      font-weight: bold;
+      &:before {
+        content: " ";
+        background-image: url("../images/highlight-arrow.png");
+        position: absolute;
+        left: -36px;
+        top: 6px;
+        width: 54px;
+        height: 67px;
+      }
+    }
+  }
+}
