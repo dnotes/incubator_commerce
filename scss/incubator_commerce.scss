@@ -23,3 +23,14 @@
     }
   }
 }
+
+@media all and (max-width:719px) {
+  .page-admin-commerce {
+    .content-left, 
+    .content-right {
+      clear:both;
+      float:none;
+      width:100%;
+    }
+  }
+}
