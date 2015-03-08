@@ -23,7 +23,7 @@ function incubator_commerce_enable() {
   $type = array(
     'type' => 'product_display',
     'name' => $t('Product display', array(), array('#context' => 'Node type name')),
-    'description' => $t('Use an <em>Event</em> for single or recurring community events.')
+    'description' => $t('Use a <em>Product display</em> to display all variations (color, size, etc.) of a product.')
   );
   $pathauto_prefix = $t('products/', array(), array('#context' => 'Web search friendly URL - no special characters'));
   if (_incubator_create_nodetype($type, $pathauto_prefix, 2, FALSE)) {
@@ -72,7 +72,7 @@ function incubator_commerce_disable() {
   ));
   _incubator_delete_nodetype('product_display');
   $role = user_role_load_by_name('salesperson');
-  user_role_($role->rid, array());
+  user_role_change_permissions($role->rid, array());
 }
 
 function incubator_commerce_uninstall() {
